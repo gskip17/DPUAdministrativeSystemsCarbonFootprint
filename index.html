@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html ng-app="CarbonFootprint">
+  <head>
+    <title>Carbon Footprint</title>
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--JQuery-->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"></script>
+    <!-- Google Api -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbEfMXsxATRh9AMfL9q5NRcFM1E504uF4&libraries=places"
+     defer></script>
+    <!-- Angular Dependecies -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-route.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers/MainController.js"></script>
+    <script src="js/directives/planeInputDirective.js"></script>
+    <script src="js/library/ngAutocomplete.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container main" ng-controller="MainController">
+
+      <div class="col-lg-6 col-lg-offset-3">
+
+        <h1 id="page-title" class="text-center">{{title}}</h1>
+        <hr>
+        <form>
+          <div class="footprint-form">
+
+              <div class="form-group">
+                <label>Date of Travel</label>
+                <input ng-model="DateOfTravel" type="date" class="form-control" name="travelDate"/>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Number of Faculty/Guests/Staff</label>
+                <input ng-model="NumFaculty" type="number" class="form-control" name="numFac"/>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Number of Students</label>
+                <input ng-model="NumStudents" type="number" class="form-control" name="numStu"/>
+              </div>
+
+              <h4>Method of Travel</h4>
+
+              <div class="radio-inline">
+              <label>
+                <input ng-model="method" type="radio" name="methodRadios" id="CarRadio" value="driving" checked>
+                Car
+              </label>
+              </div>
+
+              <div class="radio-inline">
+                <label>
+                  <input ng-model="method" type="radio" name="methodRadios" id="TransitRadio" value="transit">
+                  Transit
+                </label>
+              </div>
+
+              <div class="radio-inline">
+                <label>
+                  <input ng-model="method" type="radio" name="methodRadios" id="PlaneRAdio" value="plane">
+                  Plane
+                </label>
+              </div>
+
+              <hr>
+
+              <!-- When Driving is the chosen Method of transport, show this -->
+              <div ng-show="method == 'driving'" class="driveForm">
+
+                <div class="form-group">
+                  <label>Starting Address</label>
+                  <input id="StartAddress" ng-model="StartAddress" type="text" class="form-control" name="StartingAddress" ng-autocomplete="StartAddress"/>
+                </div>
+
+                <div class="form-group">
+                  <label>Destination Address</label>
+                  <input id="DestinationAddress" ng-model="DestAddress" type="text" class="form-control" name="DestinationAddress" ng-autocomplete="DestAddress"/>
+                </div>
+
+                <div class="checkbox">
+                  <label>
+                    <input ng-model="RoundTrip" type="checkbox" value="">
+                    Round Trip?
+                  </label>
+                </div>
+
+                <div class="form-group">
+                  <input ng-click="calcMiles()" type="button" class="btn btn-success" value="Calculate Miles">
+                </div>
+
+                <hr>
+              </div>
+
+              <!-- When Train/Transit is the chosen Method of transport, show this -->
+              <div class="trainForm" ng-show="method == 'transit'">
+
+                <div class="form-group">
+                  <label>Starting Address</label>
+                  <input ng-model="StartAddress" type="text" class="form-control" name="StartingAddress" ng-autocomplete="StartAddress"/>
+                </div>
+
+                <div class="form-group">
+                  <label>Destination Address</label>
+                  <input ng-model="DestAddress" type="text" class="form-control" name="DestinationAddress" ng-autocomplete="DestAddress"/>
+                </div>
+
+                <div class="form-group">
+                  <label>Please Enter the total Miles on the train ticket.</label>
+                  <input ng-model="trainMiles" type="text" class="form-control" name="TrainMiles"/>
+                </div>
+
+                <div class="form-group">
+                  <input ng-click="setWaypoints()" type="button" class="btn btn-success" value="Submit Miles">
+                </div>
+
+              </div>
+
+              <!-- When Plane is the chosen Method of transport, show this -->
+              <div class="planeForm" ng-show="method == 'plane'">
+
+                <h4>Flight
+                  <small>If multiple legs, please add each one separately.</small>
+                  <i class="glyphicon glyphicon-plus pull-right add-leg"></i>
+                </h4>
+
+                <div ng-repeat="(key,leg) in planeLegs track by $index">
+
+                  <div class="panel panel-default">
+                    <div class="panel-heading"><strong>Trip {{key + 1}}</strong></div>
+                    <div class="panel-body">
+
+                      <!-- Directive for Plane input -->
+                      <planeinput></planeinput>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+          </div>
+        </form>
+
+        <div ng-show="totalMileage" class="totalMiles alert alert-success text-center">Trip registered for <b>{{totalMileage}}</b></div>
+
+        <div id="map"></div>
+
+      </div>
+    </div>
+
+
+
+  </body>
+</html>
