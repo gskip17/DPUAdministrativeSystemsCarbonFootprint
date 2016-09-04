@@ -135,13 +135,15 @@
 
                 <h4>Flight
                   <small>If multiple legs, please add each one separately.</small>
-                  <i class="glyphicon glyphicon-plus pull-right add-leg"></i>
+                  <i ng-click="addLeg()" style="color:blue" class="glyphicon glyphicon-plus pull-right add-leg"></i>
                 </h4>
 
                 <div ng-repeat="(key,leg) in planeLegs track by $index">
 
                   <div class="panel panel-default">
-                    <div class="panel-heading"><strong>Trip {{key + 1}}</strong></div>
+                    <div class="panel-heading"><strong>Trip {{key + 1}}</strong>
+                      <i ng-click="removeLeg(key)" style="color:red" class="glyphicon glyphicon-minus pull-right add-leg"></i>
+                    </div>
                     <div class="panel-body">
 
                       <!-- Directive for Plane input -->
@@ -150,6 +152,10 @@
                     </div>
                   </div>
 
+                </div>
+
+                <div class="form-group">
+                  <input ng-click="getJsonDistance()" type="button" class="btn btn-success" value="Calculate Trip">
                 </div>
 
               </div>

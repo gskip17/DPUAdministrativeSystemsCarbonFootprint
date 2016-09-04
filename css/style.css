@@ -15,12 +15,10 @@ body {
 }
 
 .add-leg {
-  color: blue;
   transition: all .2s ease-in-out;
 }
 
 .add-leg:hover {
-  color: blue;
   transform: scale(1.3);
 }
 

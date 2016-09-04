@@ -78,6 +78,32 @@ app.controller('MainController', ['$scope', function($scope){
       start.setMap(map);
   }
 
+  $scope.getJsonDistance = function(){
+
+    var origin1 = 'Greencastle Indiana, United States';
+    var destinationA = 'Stockholm, Sweden';
+
+    var service = new google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(
+      {
+        origins: [origin1],
+        destinations: [destinationA],
+        travelMode: 'TRANSIT',
+        unitSystem: google.maps.UnitSystem.IMPERIAL,
+      }, function(response, status){
+        console.log(response);
+      });
+
+  };
+
+  $scope.addLeg = function(){
+    $scope.planeLegs.push(new leg());
+  }
+
+  $scope.removeLeg = function(key){
+    $scope.planeLegs.pop(key);
+  }
+
 
   function initMap(){
 
