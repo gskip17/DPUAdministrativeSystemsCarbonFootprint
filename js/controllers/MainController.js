@@ -11,10 +11,16 @@ app.controller('MainController', ['$scope', function($scope){
   $scope.DestAddress = '';
   $scope.planeLegs = [];
 
+  toastr.options = {
+    "positionClass":"toast-top-center"
+  };
+
   function leg() {
     this.StartCity = '',
     this.EndCity = '',
-    this.Miles = 0
+    this.Miles = 0,
+    this.StartDetails,
+    this.EndDetails
   };
 
   $scope.planeLegs.push(new leg());
@@ -36,7 +42,10 @@ app.controller('MainController', ['$scope', function($scope){
 
       if(status == "OK"){
         directionsDisplay.setDirections(DirectionsResult);
+      } else {
+        toastr.error('Error finding address, please make sure you are specific as possible with street addresses.');
       }
+      console.log(DirectionsResult);
 
       totalDistance = DirectionsResult.routes[0].legs[0].distance.text;
       $scope.totalMileage = DirectionsResult.routes[0].legs[0].distance.text;
@@ -102,6 +111,49 @@ app.controller('MainController', ['$scope', function($scope){
 
   $scope.removeLeg = function(key){
     $scope.planeLegs.pop(key);
+  }
+
+  $scope.getTrip = function(){
+    for(var leg in $scope.planeLegs){
+      var current = $scope.planeLegs[leg];
+
+      var startLat = current.StartDetails.geometry.location.lat();
+      var startLng = current.StartDetails.geometry.location.lng();
+      var start = new google.maps.LatLng({startLat, startLng});
+      console.log(startLat);
+      console.log(startLng);
+      console.log(start);
+
+      var destLat = current.EndDetails.geometry.location.lat();
+      var destLng = current.EndDetails.geometry.location.lng();
+      var dest = new google.maps.LatLng({destLat, destLng});
+
+      console.log(start);
+      console.log(dest);
+      var distance = google.maps.geometry.spherical.computeDistanceBetween (start, dest);
+      console.log("Computed distance is " + distance);
+    }
+
+  };
+
+  function getDistance(start, dest){
+
+    var service = new google.maps.DistanceMatrixService;
+        service.getDistanceMatrix({
+          origins: [start],
+          destinations: [dest],
+          travelMode: 'DRIVING',
+          unitSystem: google.maps.UnitSystem.METRIC,
+          avoidHighways: false,
+          avoidTolls: false
+        }, function(response, status) {
+          if (status !== 'OK') {
+            alert('Error was: ' + status);
+          }
+
+          console.log(response);
+
+        });
   }
 
 
