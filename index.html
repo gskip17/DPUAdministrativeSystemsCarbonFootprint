@@ -165,12 +165,20 @@
               </div>
 
           </div>
+
+
+          <div ng-show="totalMileage" class="totalMiles alert alert-success text-center">Trip registered for <b>{{totalMileage}} miles.</b></div>
+
+          <!-- THIS IS WHERE WE WANT TO POST THE DATA-->
+          <!-- You may need to change the forms method to post, and also give this input a type Submit-->
+          <div class="submit-row">
+            <input type="button" class="btn btn-lg btn-primary" value="Submit Miles"/>
+          </div>
+
+          <div id="map"></div>
+
+
         </form>
-
-        <div ng-show="totalMileage" class="totalMiles alert alert-success text-center">Trip registered for <b>{{totalMileage}}</b></div>
-
-        <div id="map"></div>
-
       </div>
     </div>
 
