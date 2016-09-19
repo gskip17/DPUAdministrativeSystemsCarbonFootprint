@@ -44,17 +44,17 @@
           <div class="footprint-form">
 
               <div class="form-group">
-                <label>Date of Travel</label>
+                <label>Date of Travel *</label>
                 <input ng-model="DateOfTravel" type="date" class="form-control" name="travelDate"/>
               </div>
 
               <div class="form-group col-md-6">
-                <label>Number of Faculty/Guests/Staff</label>
+                <label>Number of Faculty/Guests/Staff *</label>
                 <input ng-model="NumFaculty" type="number" class="form-control" name="numFac"/>
               </div>
 
               <div class="form-group col-md-6">
-                <label>Number of Students</label>
+                <label>Number of Students *</label>
                 <input ng-model="NumStudents" type="number" class="form-control" name="numStu"/>
               </div>
 
@@ -172,7 +172,8 @@
           <!-- THIS IS WHERE WE WANT TO POST THE DATA-->
           <!-- You may need to change the forms method to post, and also give this input a type Submit-->
           <div class="submit-row">
-            <input type="button" class="btn btn-lg btn-primary" value="Submit Miles"/>
+            <input type="button" class="btn btn-lg btn-primary" ng-click="submit()" value="Submit Miles"/>
+            <input id="value" type="hidden" value="new data()"/>
           </div>
 
           <div id="map"></div>

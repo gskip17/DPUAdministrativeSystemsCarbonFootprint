@@ -168,6 +168,7 @@ app.controller('MainController', ['$scope', function($scope){
       // if StartDetails or EndDetails is false (no input), then the input was not filled
       // in from the autocomplete dropdown.
       if(!current.StartDetails || !current.EndDetails){
+        toastr.error('Cities must be populated from the autocomplete dropdown. Please edit your plane trip.')
         return false;
       }
     }
@@ -176,9 +177,11 @@ app.controller('MainController', ['$scope', function($scope){
 
   }
 
+
   // Checks the form for a value in the main data inputs. (Not a complete validation).
   function validateBody(){
     if(!$scope.NumStudents || !$scope.NumFaculty || !$scope.DateOfTravel){
+      toastr.error('You are missing some of the required fields above.')
       return false;
     }
     return true;
@@ -201,6 +204,46 @@ app.controller('MainController', ['$scope', function($scope){
     map = new google.maps.Map(document.getElementById('map'), mapOptions);
     directionsDisplay.setMap(map);
 
+  }
+
+  $scope.submit = function(){
+
+    var input = new data();
+
+    // ensure the required fields are filled in.
+    if (validateBody() == false){
+      return;
+    }
+
+    // ensure if travel is by plane, that the form is filled in correctly.
+    if(input.travelMethod == 'plane' ){
+      if(validatePlaneTrip() == false){
+        return;
+      }
+    } else if (input.travelMethod != 'plane'){
+      input.legs = null;
+    }
+
+    // Double check that they calculated their miles.
+    if(!$scope.totalMileage){
+      return toastr.error('Please remember to calculate your trip. You must select your locations from the dropdown.');
+    }
+
+    console.log(input);
+    toastr.success('You have successfully submitted your footprint!');
+    //setTimeout(function(){
+    //  location.reload();
+    //}, 3000);
+  };
+
+  function data(){
+    this.legs = $scope.planeLegs,
+    this.roundtrip = $scope.RoundTrip,
+    this.travelMethod = $scope.method,
+    this.StartAddress = $scope.StartAddress,
+    this.DestAddress = $scope.DestAddress,
+    this.totalMiles = $scope.totalMileage,
+    this.submittedOn = new Date();
   }
 
 }]);
